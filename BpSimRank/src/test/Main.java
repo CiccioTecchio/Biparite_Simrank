@@ -26,6 +26,14 @@ public class Main {
 			printInstance();
 			int numIter=Integer.parseInt(args[3]);
 			if(numIter<=0) throw new RuntimeException();
+			numIter=1;
+			calculator.simScoreCalculator(numIter);
+			System.out.println("----------SCORE SX FINALI----------\n");
+			System.out.println(calculator.getScoreSx()+"\n");
+			System.out.println("----------SCORE SX FINALI----------\n");
+			System.out.println("----------SCORE DX FINALI----------\n");
+			System.out.println(calculator.getScoreDx()+"\n");
+			System.out.println("----------SCORE DX FINALI----------\n");
 			
 		}catch(IOException e) {e.getMessage();
 							  e.printStackTrace();}
