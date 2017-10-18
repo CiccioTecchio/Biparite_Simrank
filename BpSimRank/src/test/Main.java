@@ -3,9 +3,10 @@ package test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+import bpcalculator.*;
 public class Main {
 	
+	private static BipariteSimCalculator calculator;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
@@ -16,10 +17,12 @@ public class Main {
 			FileReader file= new FileReader(args[0]);
 			BufferedReader b= new BufferedReader(file);
 			String s=b.readLine();
-			
+			calculator=new BipariteSimCalculator();
 			while(s!=null) {
+				calculator.initNomi(s);
 				s=b.readLine();
 			}
+			printInstance();
 			int numIter=Integer.parseInt(args[3]);
 			if(numIter<=0) throw new RuntimeException();
 			
@@ -31,12 +34,15 @@ public class Main {
 	}
 	
 	public static void printInstance() {
-		System.out.println("----------NOMI----------\n");
-		System.out.println("\n");
-		System.out.println("----------NOMI----------\n");
-		System.out.println("----------MATRICE DI ADIACENZA----------\n");
-		System.out.println("\n");
-		System.out.println("----------MATRICE DI ADIACENZA----------\n");
+		System.out.println("----------NOMI SX----------\n");
+		System.out.println(calculator.getNomiSx()+"\n");
+		System.out.println("----------NOMI SX----------\n");
+		System.out.println("----------NOMI DX----------\n");
+		System.out.println(calculator.getNomiDx()+"\n");
+		System.out.println("----------NOMI DX----------\n");
+		System.out.println("----------GRAFO ----------\n");
+		System.out.println(calculator.getGraph()+"\n");
+		System.out.println("----------GRAFO----------\n");
 		System.out.println("----------SCORE INIZIALI----------\n");
 		System.out.println("\n");
 		System.out.println("----------SCORE INIZIALI----------\n");
