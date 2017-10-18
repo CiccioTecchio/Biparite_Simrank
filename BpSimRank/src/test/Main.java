@@ -22,6 +22,7 @@ public class Main {
 				calculator.initNomi(s);
 				s=b.readLine();
 			}
+			calculator.initScore(c1,c2);
 			printInstance();
 			int numIter=Integer.parseInt(args[3]);
 			if(numIter<=0) throw new RuntimeException();
@@ -43,12 +44,18 @@ public class Main {
 		System.out.println("----------GRAFO ----------\n");
 		System.out.println(calculator.getGraph()+"\n");
 		System.out.println("----------GRAFO----------\n");
-		System.out.println("----------SCORE INIZIALI----------\n");
-		System.out.println("\n");
-		System.out.println("----------SCORE INIZIALI----------\n");
-		System.out.println("----------COEFF----------\n");
-		System.out.println("\n");
-		System.out.println("----------COEFF----------\n");
+		System.out.println("----------SCORE SX INIZIALI----------\n");
+		System.out.println(calculator.getScoreSx()+"\n");
+		System.out.println("----------SCORE SX INIZIALI----------\n");
+		System.out.println("----------SCORE DX INIZIALI----------\n");
+		System.out.println(calculator.getScoreDx()+"\n");
+		System.out.println("----------SCORE DX INIZIALI----------\n");
+		System.out.println("----------COEFF SX----------\n");
+		System.out.println(calculator.getCoeffSx()+"\n");
+		System.out.println("----------COEFF SX----------\n");
+		System.out.println("----------COEFF DX----------\n");
+		System.out.println(calculator.getCoeffDx()+"\n");
+		System.out.println("----------COEFF DX----------\n");
 		
 	}
 
