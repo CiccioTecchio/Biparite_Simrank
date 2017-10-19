@@ -15,7 +15,6 @@ import org.jgrapht.graph.SimpleGraph;
 public class BipariteSimCalculator {
 
 	private Graph<String,DefaultEdge> graph;
-	private Graph<String,DefaultEdge> gQuadro;
 	private ArrayList<String> nomiSx;
 	private ArrayList<String> nomiDx;
 	private HashMap<String, Double> scoreSx;
@@ -27,7 +26,6 @@ public class BipariteSimCalculator {
 	
 	public BipariteSimCalculator() {
 	graph= new SimpleGraph<>(DefaultEdge.class);
-	gQuadro= new SimpleGraph<>(DefaultEdge.class);
 	nomiSx= new ArrayList<>();
 	nomiDx= new ArrayList<>();
 	scoreSx=new HashMap<String,Double>();
@@ -56,94 +54,68 @@ public class BipariteSimCalculator {
 	
 	public void simScoreCalculator(int iteration) {
 		int it=0;
-		
+		int it2=0;
+		int itG=0;
 		while(it<iteration) {
-			leftSimScore();
-			rightSimScore();
-			it++;
+		
+		leftSimScore();
+		
+		it++;
 		}
+		
 	}
-	
-	
-
-	
-	
 	
 	protected void rightSimScore() {
-	HashMap<String,Double>app=scoreDx;
-	Set entrySet=app.entrySet();
-	Iterator it= entrySet.iterator();
-	String key;
-	String nodes[]=new String[2];
-	Set<DefaultEdge> indexA;
-	Set<DefaultEdge> indexB;
-	String strA,strB,str="",newkey;
-	String splitA[]=new String[2];
-	String splitB[]=splitA;
-	int inA,inB,i,j;
-	double simScore=0.0,sumScore=0.0;
-	while(it.hasNext()) {
-		Map.Entry me = (Map.Entry)it.next();
-		key=""+me.getKey();
-		nodes=key.split(",");
-		indexA=graph.edgesOf(nodes[0]);
-		indexB=graph.edgesOf(nodes[1]);
-		inA=indexA.size();
-		inB=indexB.size();
-		if(nodes[0].equals(nodes[1]))scoreDx.put(key, 1.00);
-		else {
-		if((inA==0)||(inB==0)) scoreDx.put(key, 0.0);
-		else {
-			for(DefaultEdge edgeA:indexA) {
-				strA=edgeA.toString();
-				
-				//strA=strA.substring(nodes[0].length()+3);
-				strA=strA.substring(1);
-				splitA=strA.split(" : "+nodes[0]+"");
-				strA=splitA[0].trim();
-				
-				for(DefaultEdge edgeB:indexB) {
-					strB=edgeB.toString();
-					strB=strB.substring(1);
-					splitB=strB.split(" : "+nodes[1]+"");
-					strB=splitB[0].trim();
-					newkey=strA+","+strB;
-					System.out.println(newkey);
-					sumScore+=scoreSx.get(newkey);
+		HashMap<String, Double> app=scoreDx;
+		Set entrySet=app.entrySet();
+		Iterator it= entrySet.iterator();
+		String key;
+		String nodes[]=new String[2];
+		Set<DefaultEdge> indexA;
+		Set<DefaultEdge> indexB;
+		String splitA[]=new String[2];
+		String splitB[]=new String[2];
+		String strA,strB,str="",newkey;
+		int inA,inB,i,j;
+		double simScore=0.0,sumScore=0.0;
+		while(it.hasNext()) {
+			Map.Entry me = (Map.Entry)it.next();
+			key=""+me.getKey();
+			nodes=key.split(",");
+			indexA=graph.edgesOf(nodes[0]);
+			indexB=graph.edgesOf(nodes[1]);
+			//System.out.println(key);
+			//System.out.println("indexA"+indexA);
+			//System.out.println("indexB"+indexB);
+			inA=indexA.size();
+			inB=indexB.size();
+			//System.out.println("inA: "+inA);
+			//System.out.println("inB: "+inB);
+			if(nodes[0].equals(nodes[1]))scoreDx.put(key, 1.00);
+			else {
+				if((inA==0)||(inB==0)) scoreSx.put(key, 0.0);	
+				else {
+					for(DefaultEdge edgeA:indexA) {
+						strA=edgeA.toString();
+						splitA=strA.split(" : ");
+						strA=splitA[0].substring(1);
+						System.out.println(strA);
+						for(DefaultEdge edgeB:indexB) {
+							strB=edgeB.toString();
+							splitB=strB.split(" : ");
+							strB=splitB[0].substring(1);
+							newkey=strA+","+strB;
+							sumScore+=scoreSx.get(newkey);
+						}
+					}
+					simScore=coeffDx.get(key)*sumScore;
+					scoreDx.put(key, simScore);
 				}
-				
-			}
-			simScore=coeffDx.get(key)*sumScore;
-			scoreDx.put(key, simScore);
-		}
-	}//FINE ELSE
+			}//fine else
+		}//fine iterator
+		
 	}
-	
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	protected void leftSimScore() {
@@ -233,21 +205,66 @@ public class BipariteSimCalculator {
 	}
 
 	
+	
+	/*	protected void rightSimScore() {
+	HashMap<String,Double>app=scoreDx;
+	Set entrySet=app.entrySet();
+	Iterator it= entrySet.iterator();
+	String key;
+	String nodes[]=new String[2];
+	Set<DefaultEdge> indexA;
+	Set<DefaultEdge> indexB;
+	String strA,strB,str="",newkey;
+	String splitA[]=new String[2];
+	String splitB[]=splitA;
+	int inA,inB,i,j;
+	double simScore=0.0,sumScore=0.0;
+	while(it.hasNext()) {
+		Map.Entry me = (Map.Entry)it.next();
+		key=""+me.getKey();
+		nodes=key.split(",");
+		indexA=graph.edgesOf(nodes[0]);
+		indexB=graph.edgesOf(nodes[1]);
+		inA=indexA.size();
+		inB=indexB.size();
+		if(nodes[0].equals(nodes[1]))scoreDx.put(key, 1.00);
+		else {
+		if((inA==0)||(inB==0)) scoreDx.put(key, 0.0);
+		else {
+			for(DefaultEdge edgeA:indexA) {
+				strA=edgeA.toString();
+				
+				//strA=strA.substring(nodes[0].length()+3);
+				strA=strA.substring(1);
+				splitA=strA.split(" : "+nodes[0]+"");
+				strA=splitA[0].trim();
+				
+				for(DefaultEdge edgeB:indexB) {
+					strB=edgeB.toString();
+					strB=strB.substring(1);
+					splitB=strB.split(" : "+nodes[1]+"");
+					strB=splitB[0].trim();
+					newkey=strA+","+strB;
+					System.out.println(newkey);
+					sumScore+=scoreSx.get(newkey);
+				}
+				
+			}
+			simScore=coeffDx.get(key)*sumScore;
+			scoreDx.put(key, simScore);
+		}
+	}//FINE ELSE
+	}
+	
+}*/
+	
+	
 	public double assignValue(String a,String b) {
 		double toReturn=0;
 		if(a.equals(b)) toReturn=1;
 		return toReturn;
 	}
 	
-	public Graph<String, DefaultEdge> getGQuadro() {
-		return gQuadro;
-	}
-
-
-	public void setGQuadro(Graph<String, DefaultEdge> gQuadro) {
-		this.gQuadro = gQuadro;
-	}
-
 
 	public Graph<String, DefaultEdge> getGraph() {
 		return graph;
