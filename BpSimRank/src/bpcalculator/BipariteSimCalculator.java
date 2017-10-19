@@ -53,19 +53,17 @@ public class BipariteSimCalculator {
 	
 	
 	public void simScoreCalculator(int iteration) {
+		
 		int it=0;
-		int it2=0;
-		int itG=0;
+		HashMap<String, Double> appDx=scoreDx;
+		HashMap<String, Double> appSx=scoreSx;
 		while(it<iteration) {
-		
-		leftSimScore();
-		
-		it++;
+			
+			it++;
 		}
-		
 	}
 	
-	protected void rightSimScore() {
+	protected HashMap<String, Double> rightSimScore(HashMap<String, Double> appDx) {
 		HashMap<String, Double> app=scoreDx;
 		Set entrySet=app.entrySet();
 		Iterator it= entrySet.iterator();
@@ -91,15 +89,14 @@ public class BipariteSimCalculator {
 			inB=indexB.size();
 			//System.out.println("inA: "+inA);
 			//System.out.println("inB: "+inB);
-			if(nodes[0].equals(nodes[1]))scoreDx.put(key, 1.00);
+			if(nodes[0].equals(nodes[1])) {scoreDx.put(key, 1.00);}
 			else {
-				if((inA==0)||(inB==0)) scoreSx.put(key, 0.0);	
+				if((inA==0)||(inB==0)) { scoreDx.put(key, 0.0);}
 				else {
 					for(DefaultEdge edgeA:indexA) {
 						strA=edgeA.toString();
 						splitA=strA.split(" : ");
 						strA=splitA[0].substring(1);
-						System.out.println(strA);
 						for(DefaultEdge edgeB:indexB) {
 							strB=edgeB.toString();
 							splitB=strB.split(" : ");
@@ -108,17 +105,21 @@ public class BipariteSimCalculator {
 							sumScore+=scoreSx.get(newkey);
 						}
 					}
+					System.out.println("sumScore: "+sumScore+" coeff: "+coeffDx.get(key));
 					simScore=coeffDx.get(key)*sumScore;
 					scoreDx.put(key, simScore);
 				}
+				
 			}//fine else
+			simScore=0;
+			sumScore=0;
 		}//fine iterator
-		
+		return scoreDx;
 	}
 
 	
 	
-	protected void leftSimScore() {
+	protected HashMap<String, Double> leftSimScore() {
 		HashMap<String,Double>app=scoreSx;
 		Set entrySet=app.entrySet();
 		Iterator it= entrySet.iterator();
@@ -163,7 +164,7 @@ public class BipariteSimCalculator {
 		simScore=0;
 		sumScore=0;
 		}
-		
+		return scoreSx;
 	}
 	
 	
