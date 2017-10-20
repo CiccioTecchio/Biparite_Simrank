@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class ScoreTable extends HashMap<String, Double> {
+public class ScoreTable extends HashMap<String, Float> {
 
+	
+	
 	public ScoreTable() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -16,6 +18,22 @@ public class ScoreTable extends HashMap<String, Double> {
 	public ScoreTable(ScoreTable score) {
 		super(score);
 	}
+	
+	
+
+	@Override
+	public void putAll(Map<? extends String, ? extends Float> m) {
+		// TODO Auto-generated method stub
+		super.putAll(m);
+	}
+
+
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
+
 
 	public String toString(int sizeCol) {
 		Set entrySet=this.entrySet();
@@ -32,6 +50,8 @@ public class ScoreTable extends HashMap<String, Double> {
 		}
 		return str;
 	}
+	
+	
 
 	
 	

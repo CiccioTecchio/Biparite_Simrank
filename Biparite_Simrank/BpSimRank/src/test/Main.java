@@ -11,8 +11,8 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		try {
-			double c1=Double.parseDouble(args[1]);
-			double c2=Double.parseDouble(args[2]);
+			float c1=Float.parseFloat(args[1]);
+			float c2=Float.parseFloat(args[2]);
 			if((c1<=0.0 || c1>=1.00)&&(c2<=0.0 || c2>=1.00)) throw new RuntimeException();
 			FileReader file= new FileReader(args[0]);
 			BufferedReader b= new BufferedReader(file);

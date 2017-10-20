@@ -24,6 +24,8 @@ public class BipariteSimCalculator {
 	private ScoreTable scoreDx;
 	private ScoreTable coeffSx;
 	private ScoreTable coeffDx;
+	private ScoreTable vecchiaSx;
+	private ScoreTable vecchiaDx;
 	private int sizeSx;
 	private int sizeDx;
 	
@@ -37,6 +39,8 @@ public class BipariteSimCalculator {
 	coeffDx=new ScoreTable();
 	sizeSx=0;
 	sizeDx=0;
+	 vecchiaDx=new ScoreTable();
+	 vecchiaSx=new ScoreTable();
 	}
 	
 	
@@ -56,48 +60,41 @@ public class BipariteSimCalculator {
 	
 	
 	public void simScoreCalculator(int iteration) {
-		ScoreTable vecchiaDx=new ScoreTable(scoreDx);
-		ScoreTable vecchiaSx=new ScoreTable(scoreSx);
+
 		int it=0;
+		vecchiaSx.putAll(scoreSx);
+		vecchiaDx.putAll(scoreDx);
 		while(it<iteration) {
-			scoreSx=(ScoreTable) leftSimScore(vecchiaSx);
-			scoreDx=(ScoreTable) rightSimScore(vecchiaDx,vecchiaDx);
-		vecchiaSx=scoreSx;
-		vecchiaDx=scoreDx;
-			it++;
+		scoreSx=leftSimScore(vecchiaSx,vecchiaDx);
+		scoreDx=rightSimScore(vecchiaDx,vecchiaSx);
+		vecchiaSx.putAll(scoreSx);
+		vecchiaDx.putAll(scoreDx);
+		it++;
 		}
 		
 	}
 	
-	protected HashMap<String, Double> rightSimScore(HashMap<String,Double>appDx,HashMap<String,Double>appSx) {
-		HashMap<String, Double> app=appDx;
-		Set entrySet=app.entrySet();
+	protected ScoreTable rightSimScore(ScoreTable appDx,ScoreTable appSx) {
+		vecchiaDx.putAll(appDx);
+		Set entrySet=vecchiaDx.entrySet();
 		Iterator it= entrySet.iterator();
 		String key;
 		String nodes[]=new String[2];
 		Set<DefaultEdge> indexA;
 		Set<DefaultEdge> indexB;
-		String splitA[]=new String[2];
-		String splitB[]=new String[2];
-		ArrayList<String>toArrayA;
-		ArrayList<String>toArrayB;
-		String strA,strB,strC,str="",newkey;
-		int inA,inB,i,j;
-		double simScore=0.0,sumScore=0.0;
+		String newkey;
+		int inA,inB;
+		float simScore=0.0f,sumScore=0.0f;
 		while(it.hasNext()) {
 			Map.Entry me = (Map.Entry)it.next();
 			key=""+me.getKey();
 			nodes=key.split(",");
 			indexA=graph.edgesOf(nodes[0]);
 			indexB=graph.edgesOf(nodes[1]);
-			//System.out.println(key);
 			inA=indexA.size();
 			inB=indexB.size();
-			//System.out.println("inA: "+inA);
-			//System.out.println("inB: "+inB);
-			if((inA==0)||(inB==0)) { scoreDx.put(key, 0.0);}			
-			//else {
-				if(nodes[0].equals(nodes[1])) {scoreDx.put(key, 1.00);}
+			if((inA==0)||(inB==0)) { scoreDx.put(key, 0.0f);}			
+				if(nodes[0].equals(nodes[1])) {scoreDx.put(key, 1.00f);}
 				else {
 				String v1,v2="";
 							for(DefaultEdge edge : indexA) {
@@ -107,16 +104,12 @@ public class BipariteSimCalculator {
 								   for(DefaultEdge edge2 : indexB) {
 									    v2   = graph.getEdgeSource(edge2);
 									    newkey=v1+","+v2;
-									    sumScore+=scoreSx.get(newkey);
+									    sumScore+=appSx.get(newkey);
 									   
 								   }
-								      
-
-							//	}
 					simScore=coeffDx.get(key)*sumScore;
-					app.put(key, simScore);
-					app.put(nodes[1]+","+nodes[0],simScore);
-					
+					scoreDx.put(key, simScore);
+					scoreDx.put(nodes[1]+","+nodes[0],simScore);				
 				}
 				sumScore=0;
 				simScore=0;
@@ -124,24 +117,23 @@ public class BipariteSimCalculator {
 			
 			
 		}//fine iterator
-		return app;
+		return scoreDx;
 	}
 
 	
 	
-	protected HashMap<String, Double> leftSimScore(HashMap<String, Double> appSx) {
-		HashMap<String,Double>app=appSx;
-		Set entrySet=app.entrySet();
+	protected ScoreTable leftSimScore(ScoreTable appSx,ScoreTable appDx) {
+		//ScoreTable app=appSx;
+		vecchiaSx.putAll(appSx);
+		Set entrySet=vecchiaSx.entrySet();
 		Iterator it= entrySet.iterator();
 		String key;
 		String nodes[]=new String[2];
 		Set<DefaultEdge> indexA;
 		Set<DefaultEdge> indexB;
-		String strA,strB,str="",newkey;
-		int outA,outB,i,j;
-		double simScore=0.0,sumScore=0.0;
-		String splitA[]=new String[2];
-		String splitB[]=new String[2];
+		String strA,strB,newkey;
+		int outA,outB;
+		float simScore=0.0f,sumScore=0.0f;
 		while(it.hasNext()) {
 			Map.Entry me = (Map.Entry)it.next();
 			key=""+me.getKey();
@@ -150,37 +142,37 @@ public class BipariteSimCalculator {
 			indexB=graph.edgesOf(nodes[1]);
 			outA=indexA.size();
 			outB=indexB.size();
-			if(nodes[0].equals(nodes[1]))scoreSx.put(key, 1.00);
+			if(nodes[0].equals(nodes[1]))scoreSx.put(key, 1.00f);
 			else {
-			if((outA==0)||(outB==0)) scoreSx.put(key, 0.0);
+			if((outA==0)||(outB==0)) scoreSx.put(key, 0.0f);
 			else {
 				for(DefaultEdge edgeA:indexA) {
 					strA   = graph.getEdgeTarget(edgeA);
 					for(DefaultEdge edgeB:indexB) {
 						strB  = graph.getEdgeTarget(edgeB);
 						newkey=strA+","+strB;
-						sumScore+=scoreDx.get(newkey);
+						sumScore+=appDx.get(newkey);
 					}
 					
 				}
 				simScore=coeffSx.get(key)*sumScore;
-				app.put(key, simScore);
-				app.put(nodes[1]+","+nodes[0],simScore);
+				scoreSx.put(key, simScore);
+				scoreSx.put(nodes[1]+","+nodes[0],simScore);
 			}
 			simScore=0;
 			sumScore=0;
 		}//FINE ELSE
 		
 		}
-		return app;
+		return scoreSx;
 	}
 	
 	
 	
-	public void initScore(double c1,double c2) {
+	public void initScore(float c1,float c2) {
 		int i,j;
 		String key;
-		double coef=0;
+		float coef=0;
 		Set<DefaultEdge> indexA;
 		Set<DefaultEdge> indexB;
 		int inA,inB,outA,outB;
@@ -212,64 +204,9 @@ public class BipariteSimCalculator {
 		
 		
 	}
-
 	
-	
-	/*	protected void rightSimScore() {
-	HashMap<String,Double>app=scoreDx;
-	Set entrySet=app.entrySet();
-	Iterator it= entrySet.iterator();
-	String key;
-	String nodes[]=new String[2];
-	Set<DefaultEdge> indexA;
-	Set<DefaultEdge> indexB;
-	String strA,strB,str="",newkey;
-	String splitA[]=new String[2];
-	String splitB[]=splitA;
-	int inA,inB,i,j;
-	double simScore=0.0,sumScore=0.0;
-	while(it.hasNext()) {
-		Map.Entry me = (Map.Entry)it.next();
-		key=""+me.getKey();
-		nodes=key.split(",");
-		indexA=graph.edgesOf(nodes[0]);
-		indexB=graph.edgesOf(nodes[1]);
-		inA=indexA.size();
-		inB=indexB.size();
-		if(nodes[0].equals(nodes[1]))scoreDx.put(key, 1.00);
-		else {
-		if((inA==0)||(inB==0)) scoreDx.put(key, 0.0);
-		else {
-			for(DefaultEdge edgeA:indexA) {
-				strA=edgeA.toString();
-				
-				//strA=strA.substring(nodes[0].length()+3);
-				strA=strA.substring(1);
-				splitA=strA.split(" : "+nodes[0]+"");
-				strA=splitA[0].trim();
-				
-				for(DefaultEdge edgeB:indexB) {
-					strB=edgeB.toString();
-					strB=strB.substring(1);
-					splitB=strB.split(" : "+nodes[1]+"");
-					strB=splitB[0].trim();
-					newkey=strA+","+strB;
-					System.out.println(newkey);
-					sumScore+=scoreSx.get(newkey);
-				}
-				
-			}
-			simScore=coeffDx.get(key)*sumScore;
-			scoreDx.put(key, simScore);
-		}
-	}//FINE ELSE
-	}
-	
-}*/
-	
-	
-	public double assignValue(String a,String b) {
-		double toReturn=0;
+	public float assignValue(String a,String b) {
+		float toReturn=0;
 		if(a.equals(b)) toReturn=1;
 		return toReturn;
 	}
