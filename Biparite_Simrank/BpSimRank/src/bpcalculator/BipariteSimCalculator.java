@@ -59,7 +59,7 @@ public class BipariteSimCalculator {
 		ScoreTable vecchiaDx=new ScoreTable(scoreDx);
 		ScoreTable vecchiaSx=new ScoreTable(scoreSx);
 		int it=0;
-		while(it<8) {
+		while(it<iteration) {
 			scoreSx=(ScoreTable) leftSimScore(vecchiaSx);
 			scoreDx=(ScoreTable) rightSimScore(vecchiaDx,vecchiaDx);
 		vecchiaSx=scoreSx;

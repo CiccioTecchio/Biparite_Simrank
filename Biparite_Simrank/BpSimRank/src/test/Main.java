@@ -29,8 +29,8 @@ public class Main {
 			printInstance(sizeColSx,sizeColDx);
 			int numIter=Integer.parseInt(args[3]);
 			if(numIter<=0) throw new RuntimeException();
-			numIter=1;
 			calculator.simScoreCalculator(numIter);
+			
 			System.out.println("----------SCORE SX FINALI----------\n");
 			System.out.println(calculator.getScoreSx().toString(sizeColSx)+"\n");
 			System.out.println("----------SCORE SX FINALI----------\n");
