@@ -13,15 +13,17 @@ import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import structures.ScoreTable;
+
 public class BipariteSimCalculator {
 
 	private UndirectedGraph<String,DefaultEdge> graph;
 	private ArrayList<String> nomiSx;
 	private ArrayList<String> nomiDx;
-	private HashMap<String, Double> scoreSx;
-	private HashMap<String, Double> scoreDx;
-	private HashMap<String, Double> coeffSx;
-	private HashMap<String, Double> coeffDx;
+	private ScoreTable scoreSx;
+	private ScoreTable scoreDx;
+	private ScoreTable coeffSx;
+	private ScoreTable coeffDx;
 	private int sizeSx;
 	private int sizeDx;
 	
@@ -29,10 +31,10 @@ public class BipariteSimCalculator {
 	graph= new SimpleGraph<>(DefaultEdge.class);
 	nomiSx= new ArrayList<>();
 	nomiDx= new ArrayList<>();
-	scoreSx=new HashMap<String,Double>();
-	scoreDx=new HashMap<String,Double>();
-	coeffSx=new HashMap<String,Double>();
-	coeffDx=new HashMap<String,Double>();
+	scoreSx=new ScoreTable();
+	scoreDx=new ScoreTable();
+	coeffSx=new ScoreTable();
+	coeffDx=new ScoreTable();
 	sizeSx=0;
 	sizeDx=0;
 	}
@@ -54,22 +56,21 @@ public class BipariteSimCalculator {
 	
 	
 	public void simScoreCalculator(int iteration) {
-		HashMap<String,Double>appDx=new HashMap<>(scoreDx);
-		HashMap<String, Double>appSx=new HashMap<>(scoreSx);
+		ScoreTable vecchiaDx=new ScoreTable(scoreDx);
+		ScoreTable vecchiaSx=new ScoreTable(scoreSx);
 		int it=0;
-		while(it<iteration) {
-			appDx=scoreDx;
-			appSx=scoreSx;
-			scoreDx=rightSimScore(appSx);
-			scoreSx=leftSimScore(appDx,appSx);
+		while(it<8) {
+			scoreSx=(ScoreTable) leftSimScore(vecchiaSx);
+			scoreDx=(ScoreTable) rightSimScore(vecchiaDx,vecchiaDx);
+		vecchiaSx=scoreSx;
+		vecchiaDx=scoreDx;
 			it++;
 		}
 		
 	}
 	
-	protected HashMap<String, Double> rightSimScore(HashMap<String, Double> appSx) {
-		HashMap<String, Double> app=scoreDx;
-		System.out.println("test: "+appSx);
+	protected HashMap<String, Double> rightSimScore(HashMap<String,Double>appDx,HashMap<String,Double>appSx) {
+		HashMap<String, Double> app=appDx;
 		Set entrySet=app.entrySet();
 		Iterator it= entrySet.iterator();
 		String key;
@@ -106,12 +107,10 @@ public class BipariteSimCalculator {
 								   for(DefaultEdge edge2 : indexB) {
 									    v2   = graph.getEdgeSource(edge2);
 									    newkey=v1+","+v2;
-									    System.out.println(edge+","+edge2+"\tnewkey: "+newkey);
-									    sumScore+=appSx.get(newkey);
-									    System.out.println(sumScore);
+									    sumScore+=scoreSx.get(newkey);
 									   
 								   }
-								   System.out.println("FINE INTERNO");   
+								      
 
 							//	}
 					simScore=coeffDx.get(key)*sumScore;
@@ -130,7 +129,7 @@ public class BipariteSimCalculator {
 
 	
 	
-	protected HashMap<String, Double> leftSimScore(HashMap<String, Double> appDx,HashMap<String, Double> appSx) {
+	protected HashMap<String, Double> leftSimScore(HashMap<String, Double> appSx) {
 		HashMap<String,Double>app=appSx;
 		Set entrySet=app.entrySet();
 		Iterator it= entrySet.iterator();
@@ -160,7 +159,7 @@ public class BipariteSimCalculator {
 					for(DefaultEdge edgeB:indexB) {
 						strB  = graph.getEdgeTarget(edgeB);
 						newkey=strA+","+strB;
-						sumScore+=appDx.get(newkey);
+						sumScore+=scoreDx.get(newkey);
 					}
 					
 				}
@@ -306,42 +305,42 @@ public class BipariteSimCalculator {
 	}
 
 
-	public HashMap<String, Double> getScoreSx() {
+	public ScoreTable getScoreSx() {
 		return scoreSx;
 	}
 
 
-	public void setScoreSx(HashMap<String, Double> scoreSx) {
+	public void setScoreSx(ScoreTable scoreSx) {
 		this.scoreSx = scoreSx;
 	}
 
 
-	public HashMap<String, Double> getScoreDx() {
+	public ScoreTable getScoreDx() {
 		return scoreDx;
 	}
 
 
-	public void setScoreDx(HashMap<String, Double> scoreDx) {
+	public void setScoreDx(ScoreTable scoreDx) {
 		this.scoreDx = scoreDx;
 	}
 
 
-	public HashMap<String, Double> getCoeffSx() {
+	public ScoreTable getCoeffSx() {
 		return coeffSx;
 	}
 
 
-	public void setCoeffSx(HashMap<String, Double> coeffSx) {
+	public void setCoeffSx(ScoreTable coeffSx) {
 		this.coeffSx = coeffSx;
 	}
 
 
-	public HashMap<String, Double> getCoeffDx() {
+	public ScoreTable getCoeffDx() {
 		return coeffDx;
 	}
 
 
-	public void setCoeffDx(HashMap<String, Double> coeffDx) {
+	public void setCoeffDx(ScoreTable coeffDx) {
 		this.coeffDx = coeffDx;
 	}
 

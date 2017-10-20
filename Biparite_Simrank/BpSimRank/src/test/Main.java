@@ -23,16 +23,19 @@ public class Main {
 				s=b.readLine();
 			}
 			calculator.initScore(c1,c2);
-			printInstance();
+			int sizeColSx,sizeColDx;
+			sizeColSx=calculator.getNomiSx().size();
+			sizeColDx=calculator.getNomiDx().size();
+			printInstance(sizeColSx,sizeColDx);
 			int numIter=Integer.parseInt(args[3]);
 			if(numIter<=0) throw new RuntimeException();
 			numIter=1;
 			calculator.simScoreCalculator(numIter);
 			System.out.println("----------SCORE SX FINALI----------\n");
-			System.out.println(calculator.getScoreSx()+"\n");
+			System.out.println(calculator.getScoreSx().toString(sizeColSx)+"\n");
 			System.out.println("----------SCORE SX FINALI----------\n");
 			System.out.println("----------SCORE DX FINALI----------\n");
-			System.out.println(calculator.getScoreDx()+"\n");
+			System.out.println(calculator.getScoreDx().toString(sizeColDx)+"\n");
 			System.out.println("----------SCORE DX FINALI----------\n");
 			
 		}catch(IOException e) {e.getMessage();
@@ -42,7 +45,7 @@ public class Main {
 		
 	}
 	
-	public static void printInstance() {
+	public static void printInstance(int sizeColSx,int sizeColDx) {
 		System.out.println("----------NOMI SX----------\n");
 		System.out.println(calculator.getNomiSx()+"\n");
 		System.out.println("----------NOMI SX----------\n");
@@ -53,16 +56,16 @@ public class Main {
 		System.out.println(calculator.getGraph()+"\n");
 		System.out.println("----------GRAFO----------\n");
 		System.out.println("----------SCORE SX INIZIALI----------\n");
-		System.out.println(calculator.getScoreSx()+"\n");
+		System.out.println(calculator.getScoreSx().toString(sizeColSx)+"\n");
 		System.out.println("----------SCORE SX INIZIALI----------\n");
 		System.out.println("----------SCORE DX INIZIALI----------\n");
-		System.out.println(calculator.getScoreDx()+"\n");
+		System.out.println(calculator.getScoreDx().toString(sizeColDx)+"\n");
 		System.out.println("----------SCORE DX INIZIALI----------\n");
 		System.out.println("----------COEFF SX----------\n");
-		System.out.println(calculator.getCoeffSx()+"\n");
+		System.out.println(calculator.getCoeffSx().toString(sizeColSx)+"\n");
 		System.out.println("----------COEFF SX----------\n");
 		System.out.println("----------COEFF DX----------\n");
-		System.out.println(calculator.getCoeffDx()+"\n");
+		System.out.println(calculator.getCoeffDx().toString(sizeColDx)+"\n");
 		System.out.println("----------COEFF DX----------\n");
 		
 	}
