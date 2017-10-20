@@ -28,6 +28,7 @@ public class BipariteSimCalculator {
 	private ScoreTable vecchiaDx;
 	private int sizeSx;
 	private int sizeDx;
+	private static final char SEPARATOR =',';
 	
 	public BipariteSimCalculator() {
 	graph= new SimpleGraph<>(DefaultEdge.class);
@@ -46,7 +47,8 @@ public class BipariteSimCalculator {
 	
 	public void initNomi (String s) {
 		String [] nodes= new String[2];
-		nodes=s.split(",");
+		
+		nodes=s.split(""+SEPARATOR);
 		graph.addVertex(nodes[0]);
 		graph.addVertex(nodes[1]);
 		graph.addEdge(nodes[0], nodes[1]);
@@ -88,7 +90,7 @@ public class BipariteSimCalculator {
 		while(it.hasNext()) {
 			Map.Entry me = (Map.Entry)it.next();
 			key=""+me.getKey();
-			nodes=key.split(",");
+			nodes=key.split(""+SEPARATOR);
 			indexA=graph.edgesOf(nodes[0]);
 			indexB=graph.edgesOf(nodes[1]);
 			inA=indexA.size();
@@ -103,13 +105,13 @@ public class BipariteSimCalculator {
 								    
 								   for(DefaultEdge edge2 : indexB) {
 									    v2   = graph.getEdgeSource(edge2);
-									    newkey=v1+","+v2;
+									    newkey=v1+SEPARATOR+v2;
 									    sumScore+=appSx.get(newkey);
 									   
 								   }
 					simScore=coeffDx.get(key)*sumScore;
 					scoreDx.put(key, simScore);
-					scoreDx.put(nodes[1]+","+nodes[0],simScore);				
+					scoreDx.put(nodes[1]+SEPARATOR+nodes[0],simScore);				
 				}
 				sumScore=0;
 				simScore=0;
@@ -137,7 +139,7 @@ public class BipariteSimCalculator {
 		while(it.hasNext()) {
 			Map.Entry me = (Map.Entry)it.next();
 			key=""+me.getKey();
-			nodes=key.split(",");
+			nodes=key.split(""+SEPARATOR);
 			indexA=graph.edgesOf(nodes[0]);
 			indexB=graph.edgesOf(nodes[1]);
 			outA=indexA.size();
@@ -150,14 +152,14 @@ public class BipariteSimCalculator {
 					strA   = graph.getEdgeTarget(edgeA);
 					for(DefaultEdge edgeB:indexB) {
 						strB  = graph.getEdgeTarget(edgeB);
-						newkey=strA+","+strB;
+						newkey=strA+SEPARATOR+strB;
 						sumScore+=appDx.get(newkey);
 					}
 					
 				}
 				simScore=coeffSx.get(key)*sumScore;
 				scoreSx.put(key, simScore);
-				scoreSx.put(nodes[1]+","+nodes[0],simScore);
+				scoreSx.put(nodes[1]+SEPARATOR+nodes[0],simScore);
 			}
 			simScore=0;
 			sumScore=0;
@@ -178,7 +180,7 @@ public class BipariteSimCalculator {
 		int inA,inB,outA,outB;
 		for(i=0;i<sizeSx;i++) {
 			for(j=0;j<sizeSx;j++) {
-				key=nomiSx.get(i)+","+nomiSx.get(j);
+				key=nomiSx.get(i)+SEPARATOR+nomiSx.get(j);
 				scoreSx.put(key, assignValue(nomiSx.get(i),nomiSx.get(j)));
 				indexA=graph.edgesOf(nomiSx.get(i));
 				indexB=graph.edgesOf(nomiSx.get(j));
@@ -191,7 +193,7 @@ public class BipariteSimCalculator {
 		coef=0;
 		for(i=0;i<sizeDx;i++) {
 			for(j=0;j<sizeDx;j++) {
-				key=nomiDx.get(i)+","+nomiDx.get(j);
+				key=nomiDx.get(i)+SEPARATOR+nomiDx.get(j);
 				scoreDx.put(key, assignValue(nomiDx.get(i),nomiDx.get(j)));
 				indexA=graph.edgesOf(nomiDx.get(i));
 				indexB=graph.edgesOf(nomiDx.get(j));
